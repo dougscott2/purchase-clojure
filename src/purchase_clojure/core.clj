@@ -6,7 +6,7 @@
             [hiccup.core :as h])
   (:gen-class))
 
-(defn read-purchase []
+(defn read-purchases []
   (let [purchases (slurp "purchases.csv")         ;slurp the file
         purchases (str/split-lines purchases)
         purchases (map (fn [line]
@@ -21,25 +21,24 @@
                          (apply hash-map line))
                        purchases)
         purchases (walk/keywordize-keys purchases)
-         input (read-line)
-            purchases (filter (fn [line]
+        input (read-line)
+        purchases (filter (fn [line]
                             (= input (:category line)))
                           purchases)]
    #_ (spit "filtered_purchases.edn"
-          (with-out-str (pp/pprint purchases)))
-   purchases))
+          (pr-str purchases))purchases))
 
-(defn purchase-html []
-  (let [purchases (read-purchase)]
+(defn purchases-html []
+  (let [purchases (read-purchases)]
     (map (fn [line]
            [:p (str (:customer_id line)
                     " "
                     (:date line)
-                    ""
+                    " "
                     (:credit_card line)
-                    ""
+                    " "
                     (:cvv line)
-                    ""
+                    " "
                     (:category line))])
          purchases))
   )
@@ -49,8 +48,7 @@
    :headers {"Content-Type" "text/html"}
    :body    (h/html [:html
                      [:body
-                      [:br]
-                      (purchase-html)
+                      (purchases-html)
                       ]])}
   )
 
