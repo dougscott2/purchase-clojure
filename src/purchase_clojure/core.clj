@@ -20,11 +20,7 @@
         purchases (map (fn [line]
                          (apply hash-map line))
                        purchases)
-        purchases (walk/keywordize-keys purchases)
-        input (read-line)
-        purchases (filter (fn [line]
-                            (= input (:category line)))
-                          purchases)]
+        purchases (walk/keywordize-keys purchases)]
    #_ (spit "filtered_purchases.edn"
           (pr-str purchases))purchases))
 
@@ -48,6 +44,7 @@
    :headers {"Content-Type" "text/html"}
    :body    (h/html [:html
                      [:body
+                      [:br]
                       (purchases-html)
                       ]])}
   )
