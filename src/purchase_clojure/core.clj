@@ -20,24 +20,32 @@
         purchases (map (fn [line]
                          (apply hash-map line))
                        purchases)
-        purchases (walk/keywordize-keys purchases)]
+        purchases (walk/keywordize-keys purchases)
+        #_input #_(read-line)
+        #_purchases #_(filter (fn [line]
+                            (= input (:category line)))
+                          purchases)]
    #_ (spit "filtered_purchases.edn"
-          (pr-str purchases))purchases))
+          (pr-str purchases))
+   purchases))
 
 (defn purchases-html []
   (let [purchases (read-purchases)]
     (map (fn [line]
-           [:p (str (:customer_id line)
-                    " "
+           [:p (str "Customer Id:"
+                    (:customer_id line)
+                    " Date: "
                     (:date line)
-                    " "
+                    " CC#: "
                     (:credit_card line)
-                    " "
+                    " CVV: "
                     (:cvv line)
-                    " "
+                    " Category: "
                     (:category line))])
          purchases))
   )
+
+
 
 (defn handler [request]
   {:status  200
@@ -51,5 +59,4 @@
 
 (defn -main [& args]
   (j/run-jetty #'handler {:port 3000 :join? false})
-
   )
